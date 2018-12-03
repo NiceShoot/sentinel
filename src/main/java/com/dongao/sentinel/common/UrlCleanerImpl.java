@@ -17,6 +17,6 @@ public class UrlCleanerImpl implements UrlCleaner {
         if (StringUtil.isBlank(originUrl))
             return null;
         else
-            return originUrl;
+            return "hello";
     }
 }
