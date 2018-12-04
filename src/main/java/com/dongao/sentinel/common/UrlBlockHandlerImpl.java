@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 /**
  * @author jiabing
  * @Package com.dongao.sentinel.common
- * @Description: block 异常处理
+ * @Description: block 处理
  * @date 2018/11/30 15:51
  */
 public class UrlBlockHandlerImpl implements UrlBlockHandler {
