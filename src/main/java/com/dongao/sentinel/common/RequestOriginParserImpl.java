@@ -16,6 +16,6 @@ public class RequestOriginParserImpl implements RequestOriginParser{
 
         String origin = request.getHeader("Origin");
 
-        return origin;
+        return "http://127.0.0.1/hello";
     }
 }

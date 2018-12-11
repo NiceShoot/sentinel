@@ -14,8 +14,8 @@ public class UrlCleanerImpl implements UrlCleaner {
 
     @Override
     public String clean(String originUrl) {
-        if (StringUtil.isBlank(originUrl))
-            return null;
+        if (originUrl.startsWith("/hello"))
+            return "hello";
         else
             return "hello";
     }

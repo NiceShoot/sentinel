@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author jiabing
  * @Package com.dongao.sentinel.controller
@@ -22,6 +24,8 @@ public class Sentinel_Web {
 
     @RequestMapping(value = "/sentinelWeb_block")
     public String sentinelWeb_block(){
+        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+        concurrentHashMap.put("","");
         return "error/error";
     }
 }

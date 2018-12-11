@@ -9,6 +9,8 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.csp.sentinel.slots.system.SystemRule;
+import com.alibaba.csp.sentinel.slots.system.SystemRuleManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -54,6 +56,7 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
 
         //启动zk监听
         this.nodeChangeListen();
+
     }
 
 
@@ -77,8 +80,11 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
      * 适配web-servlet
      */
     public void initWebServlet(){
+
         WebCallbackManager.setUrlCleaner(new UrlCleanerImpl());
+
         WebCallbackManager.setRequestOriginParser(new RequestOriginParserImpl());
+
         WebCallbackManager.setUrlBlockHandler(new UrlBlockHandlerImpl());
     }
 
@@ -130,5 +136,17 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
         DegradeRuleManager.loadRules(rules);
     }
 
-
+    /**
+     * 系统保护规则
+     */
+    private void initSystemRule() {
+        List<SystemRule> rules = new ArrayList<>();
+        SystemRule rule = new SystemRule();
+        rule.setHighestSystemLoad(3);
+        rule.setMaxThread(3);
+        rule.setQps(2);
+        rule.setAvgRt(2);
+        rules.add(rule);
+        SystemRuleManager.loadRules(rules);
+    }
 }

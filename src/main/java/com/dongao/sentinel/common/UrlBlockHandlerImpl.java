@@ -24,8 +24,10 @@ public class UrlBlockHandlerImpl implements UrlBlockHandler {
         if ("GET".equals(request.getMethod()) && StringUtil.isNotBlank(request.getQueryString())) {
             url.append("?").append(request.getQueryString());
         }
+
         //设置一个错误页面
         WebServletConfig.setBlockPage("/sentinelWeb_block");
+
         if (StringUtil.isEmpty(WebServletConfig.getBlockPage())) {
             writeDefaultBlockedPage(response);
         } else {
