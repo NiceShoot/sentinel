@@ -9,6 +9,9 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowItem;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.alibaba.csp.sentinel.slots.system.SystemRule;
 import com.alibaba.csp.sentinel.slots.system.SystemRuleManager;
 import com.alibaba.fastjson.JSON;
@@ -27,6 +30,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +54,9 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
 
         //降级规则
         this.initFlowDeRule();
+
+        //参数控制
+        this.initParamRule();
 
         //适配web-servlet
         this.initWebServlet();
@@ -148,5 +155,21 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
         rule.setAvgRt(2);
         rules.add(rule);
         SystemRuleManager.loadRules(rules);
+    }
+
+    /**
+     * 参数控制
+     */
+    private void initParamRule() {
+        ParamFlowRule rule = new ParamFlowRule("hello_param")
+                .setParamIdx(0)
+                .setCount(2);
+        // 针对 int 类型的参数 PARAM_B，单独设置限流 QPS 阈值为 10，而不是全局的阈值 5.
+        ParamFlowItem item = new ParamFlowItem().setObject(String.valueOf(5))
+                .setClassType(int.class.getName())
+                .setCount(30);
+        rule.setParamFlowItemList(Collections.singletonList(item));
+
+        ParamFlowRuleManager.loadRules(Collections.singletonList(rule));
     }
 }
