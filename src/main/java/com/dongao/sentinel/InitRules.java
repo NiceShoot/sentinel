@@ -5,6 +5,8 @@ import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.zookeeper.ZookeeperDataSource;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRule;
+import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRuleManager;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
@@ -57,6 +59,9 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
 
         //参数控制
         this.initParamRule();
+
+        //黑白名单控制
+        this.initBlackWhiteRule();
 
         //适配web-servlet
         this.initWebServlet();
@@ -171,5 +176,18 @@ public class InitRules implements ApplicationListener<ContextRefreshedEvent> {
         rule.setParamFlowItemList(Collections.singletonList(item));
 
         ParamFlowRuleManager.loadRules(Collections.singletonList(rule));
+    }
+
+    /**
+     * 黑白名单控制
+     *
+     * 配合：ContextUtil.enter(resourceName, origin)使用
+     */
+    private void initBlackWhiteRule() {
+        AuthorityRule rule = new AuthorityRule();
+        rule.setResource("test");
+        rule.setStrategy(RuleConstant.AUTHORITY_WHITE);
+        rule.setLimitApp("appA,appB");
+        AuthorityRuleManager.loadRules(Collections.singletonList(rule));
     }
 }
